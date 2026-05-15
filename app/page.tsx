@@ -7,9 +7,9 @@ import ChipRow from "@/components/ChipRow";
 import MythCard from "@/components/MythCard";
 import SupplementCard from "@/components/SupplementCard";
 import StatsBar from "@/components/StatsBar";
+import SearchResult from "@/components/SearchResult";
 import { myths } from "@/data/myths";
 import { supplements } from "@/data/supplements";
-import { useRouter } from "next/navigation";
 
 const chips = [
   "Creatine",
@@ -30,15 +30,53 @@ const photoGrid = [
   { id: "1549060279-7e168fcee0c2", label: "Nutrition" },
 ];
 
+type SearchState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; query: string; broAnswer: string; scienceAnswer: string }
+  | { status: "error"; message: string };
+
 export default function HomePage() {
   const [activeChip, setActiveChip] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
-  const router = useRouter();
+  const [searchState, setSearchState] = useState<SearchState>({ status: "idle" });
 
-  function handleSearch(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (searchValue.trim()) {
-      router.push(`/myths?q=${encodeURIComponent(searchValue.trim())}`);
+    const query = searchValue.trim();
+    if (!query) return;
+
+    setSearchState({ status: "loading" });
+
+    try {
+      const res = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setSearchState({ status: "error", message: data.error ?? "Something went wrong." });
+        return;
+      }
+
+      setSearchState({
+        status: "success",
+        query,
+        broAnswer: data.broAnswer,
+        scienceAnswer: data.scienceAnswer,
+      });
+    } catch {
+      setSearchState({ status: "error", message: "Network error. Try again." });
+    }
+  }
+
+  function handleChipSelect(chip: string | null) {
+    setActiveChip(chip);
+    if (chip) {
+      setSearchValue(chip);
+      setSearchState({ status: "idle" });
     }
   }
 
@@ -69,31 +107,64 @@ export default function HomePage() {
             </p>
           </div>
 
-          <form onSubmit={handleSearch} className="w-full mb-5">
+          {/* Search bar */}
+          <form onSubmit={handleSearch} className="w-full mb-3">
             <div className="relative">
               <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                </svg>
+                {searchState.status === "loading" ? (
+                  <svg className="h-5 w-5 animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                  </svg>
+                )}
               </span>
               <input
                 type="search"
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder='Try "creatine" or "spot reduction"...'
-                aria-label="Search myths"
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  if (searchState.status !== "idle") setSearchState({ status: "idle" });
+                }}
+                placeholder='Ask anything — "does creatine work?" "is cardio bad?"'
+                aria-label="Ask a fitness question"
                 className="w-full min-h-[56px] rounded-full bg-white/95 backdrop-blur-sm pl-14 pr-32 text-base text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500/50 shadow-xl transition"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[42px] px-5 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-sm"
+                disabled={searchState.status === "loading" || !searchValue.trim()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[42px] px-5 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
               >
-                Search
+                {searchState.status === "loading" ? "Asking…" : "Ask"}
               </button>
             </div>
           </form>
 
-          <ChipRow chips={chips} activeChip={activeChip} onSelect={setActiveChip} />
+          {/* Search result */}
+          {searchState.status === "success" && (
+            <SearchResult
+              query={searchState.query}
+              broAnswer={searchState.broAnswer}
+              scienceAnswer={searchState.scienceAnswer}
+              onClear={() => setSearchState({ status: "idle" })}
+            />
+          )}
+
+          {searchState.status === "error" && (
+            <p className="text-red-300 text-sm font-medium mt-2 px-1">
+              {searchState.message}
+            </p>
+          )}
+
+          {/* Chip row — visible when no result showing */}
+          {searchState.status !== "success" && (
+            <div className="mt-3">
+              <ChipRow chips={chips} activeChip={activeChip} onSelect={handleChipSelect} />
+            </div>
+          )}
         </div>
       </section>
 
