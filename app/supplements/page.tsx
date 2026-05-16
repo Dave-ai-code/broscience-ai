@@ -21,25 +21,24 @@ export default function SupplementsPage() {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-100">
-        <div className="mx-auto max-w-5xl px-4 pt-8 pb-6">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">
-            Evidence-rated
-          </p>
-          <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
-            Supplement Checker
-          </h1>
-          <SearchBar
-            value={query}
-            onChange={setQuery}
-            placeholder="Search supplements..."
-          />
-        </div>
+      {/* Header */}
+      <div className="px-[18px] pt-8 pb-4" style={{ borderBottom: "1px solid var(--line)" }}>
+        <p
+          className="text-[11px] uppercase tracking-[0.12em] font-medium mb-1"
+          style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+        >
+          Evidence-rated
+        </p>
+        <h1 className="text-[28px] font-semibold tracking-[-0.025em] mb-4" style={{ color: "var(--ink)" }}>
+          Supplement Checker
+        </h1>
+        <SearchBar value={query} onChange={setQuery} placeholder="Search supplements…" />
       </div>
 
-      <div className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-12">
+      {/* Cards */}
+      <div className="px-[18px] py-6">
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {filtered.map((supp) => (
               <SupplementCard key={supp.id} supplement={supp} />
             ))}
@@ -47,25 +46,24 @@ export default function SupplementsPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-5xl mb-4">💊</span>
-            <h3 className="text-xl font-black text-gray-900 mb-2">
+            <h3 className="text-[19px] font-semibold mb-2" style={{ color: "var(--ink)" }}>
               No supplements found
             </h3>
-            <p className="text-gray-500 text-sm max-w-xs">
+            <p className="text-[13px]" style={{ color: "var(--muted)" }}>
               Try a different search term.
             </p>
             <button
               onClick={() => setQuery("")}
-              className="mt-5 min-h-[48px] px-6 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-500 active:scale-95 transition-all"
+              className="mt-5 h-[44px] px-6 rounded-full text-sm font-semibold active:scale-95 transition-all"
+              style={{ background: "var(--blue)", color: "#fff" }}
             >
               Clear search
             </button>
           </div>
         )}
 
-        {/* Disclaimer */}
-        <p className="mt-12 text-xs text-gray-400 text-center leading-relaxed max-w-lg mx-auto">
-          We may earn a small commission from Amazon links at no extra cost to
-          you. We only recommend stuff that&apos;s actually backed by evidence.
+        <p className="mt-10 text-[11px] text-center leading-relaxed max-w-sm mx-auto" style={{ color: "var(--muted-2)" }}>
+          We may earn a small commission from Amazon links at no extra cost to you. We only recommend evidence-backed products.
         </p>
       </div>
     </>

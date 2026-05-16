@@ -12,49 +12,62 @@ function getAmazonUrl(name: string) {
 
 export default function SupplementCard({ supplement }: SupplementCardProps) {
   return (
-    <article className="flex flex-col gap-3 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-black text-gray-900 text-lg leading-tight">
-          {supplement.name}
-        </h3>
-        <VerdictBadge verdict={supplement.verdict} size="md" />
-      </div>
-
-      <div className="space-y-2">
-        <p className="text-sm text-gray-400 line-through leading-snug">
+    <article className="flex flex-col rounded-2xl overflow-hidden" style={{ border: "1px solid var(--line)" }}>
+      {/* Crossed-out bro myth */}
+      <div
+        className="px-[14px] py-[10px]"
+        style={{
+          background: "var(--bg-soft)",
+          borderBottom: "1px dashed var(--line-2)",
+        }}
+      >
+        <p
+          className="text-[10px] uppercase tracking-[0.08em] font-semibold mb-1"
+          style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+        >
+          Bro says
+        </p>
+        <p
+          className="text-[13px] leading-snug"
+          style={{
+            color: "var(--muted)",
+            textDecoration: "line-through",
+            textDecorationColor: "var(--debunked)",
+            textDecorationThickness: "1.5px",
+          }}
+        >
           &ldquo;{supplement.broMyth}&rdquo;
         </p>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {supplement.reality}
-        </p>
       </div>
 
-      {supplement.hasAmazonLink && (
-        <a
-          href={getAmazonUrl(supplement.name)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-auto inline-flex items-center justify-center min-h-[48px] rounded-full bg-blue-600 text-white text-sm font-bold px-5 hover:bg-blue-500 active:scale-95 transition-all duration-150 shadow-sm"
-          aria-label={`Buy ${supplement.name} on Amazon`}
-        >
-          Buy on Amazon
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="ml-2 h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-            aria-hidden="true"
+      {/* Science reality */}
+      <div className="flex flex-col gap-2 px-[14px] py-[14px] flex-1" style={{ background: "var(--bg-card)" }}>
+        <div className="flex items-start justify-between gap-3">
+          <h3
+            className="font-semibold text-base leading-tight tracking-[-0.01em]"
+            style={{ color: "var(--ink)" }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-            />
-          </svg>
-        </a>
-      )}
+            {supplement.name}
+          </h3>
+          <VerdictBadge verdict={supplement.verdict} size="sm" />
+        </div>
+        <p className="text-[13px] leading-[1.5]" style={{ color: "var(--ink-2)" }}>
+          {supplement.reality}
+        </p>
+
+        {supplement.hasAmazonLink && (
+          <a
+            href={getAmazonUrl(supplement.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center justify-center w-full h-[38px] rounded-xl text-[13px] font-semibold transition-opacity hover:opacity-80"
+            style={{ background: "var(--blue)", color: "#fff" }}
+            aria-label={`Buy ${supplement.name} on Amazon`}
+          >
+            Buy on Amazon ↗
+          </a>
+        )}
+      </div>
     </article>
   );
 }

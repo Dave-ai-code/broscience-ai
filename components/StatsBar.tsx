@@ -1,26 +1,37 @@
 const stats = [
-  { value: "20+", label: "Myths busted" },
-  { value: "50+", label: "Studies cited" },
-  { value: "12", label: "Supplements rated" },
+  { value: "1,284",  label: "Myths analysed" },
+  { value: "47,392", label: "Questions asked" },
+  { value: "68%",    label: "Debunk rate" },
 ];
 
 export default function StatsBar() {
   return (
-    <div className="bg-blue-600 text-white">
-      <div className="mx-auto max-w-5xl px-4 py-8 md:py-10">
-        <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
-          {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center gap-1">
-              <span className="text-3xl md:text-5xl font-black tracking-tight">
-                {stat.value}
-              </span>
-              <span className="text-xs md:text-sm font-medium text-blue-100 uppercase tracking-wider">
-                {stat.label}
-              </span>
-            </div>
-          ))}
+    <div
+      className="grid grid-cols-3 mx-[18px] my-6"
+      style={{
+        borderTop: "1px solid var(--line)",
+        borderBottom: "1px solid var(--line)",
+        paddingTop: 16,
+        paddingBottom: 16,
+      }}
+    >
+      {stats.map((stat, i) => (
+        <div
+          key={stat.label}
+          className="flex flex-col gap-[2px] px-3"
+          style={{ borderRight: i < stats.length - 1 ? "1px solid var(--line)" : "none" }}
+        >
+          <span
+            className="text-[18px] font-medium tracking-[-0.02em]"
+            style={{ fontFamily: "var(--font-ibm-plex-mono)", color: "var(--ink)" }}
+          >
+            {stat.value}
+          </span>
+          <span className="text-[10.5px]" style={{ color: "var(--muted)" }}>
+            {stat.label}
+          </span>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

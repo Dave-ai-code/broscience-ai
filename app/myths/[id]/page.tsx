@@ -23,13 +23,6 @@ const verdictMeta: Record<string, { headline: string; detail: string }> = {
   },
 };
 
-const heroIds = [
-  "1571019613454-1cb2f99b2d8b",
-  "1544367567-0f2fcb009e0b",
-  "1583454110551-21f2fa2afe61",
-  "1549060279-7e168fcee0c2",
-];
-
 export default async function MythDetailPage({
   params,
 }: {
@@ -40,76 +33,113 @@ export default async function MythDetailPage({
   if (!myth) notFound();
 
   const meta = verdictMeta[myth.verdict];
-  const heroId = heroIds[(myth.id - 1) % heroIds.length];
-  const related = myths.filter((m) => m.id !== myth.id && m.verdict === myth.verdict).slice(0, 3);
+  const related = myths
+    .filter((m) => m.id !== myth.id && m.verdict === myth.verdict)
+    .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ─── HERO ── */}
-      <div className="relative h-64 md:h-80 bg-gray-900 overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`https://images.unsplash.com/photo-${heroId}?w=1200&q=80`}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/70" />
-        <div className="relative z-10 h-full flex flex-col justify-end px-4 pb-6 mx-auto max-w-3xl">
-          <Link
-            href="/myths"
-            className="inline-flex items-center gap-1.5 text-white/70 hover:text-white text-sm font-semibold mb-4 transition-colors w-fit"
-          >
-            ← Back to Myth Lab
-          </Link>
-          <VerdictBadge verdict={myth.verdict} size="md" />
-        </div>
+    <div>
+      {/* Back */}
+      <div className="px-[18px] pt-6 pb-0">
+        <Link
+          href="/myths"
+          className="inline-flex items-center gap-1.5 text-[13px] font-medium transition-opacity hover:opacity-70"
+          style={{ color: "var(--muted)" }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Myth Lab
+        </Link>
       </div>
 
-      {/* ─── CONTENT ── */}
-      <div className="mx-auto max-w-3xl px-4 py-8 md:py-12">
-        <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-6">
+      {/* Hero */}
+      <div className="px-[18px] pt-5 pb-6" style={{ borderBottom: "1px solid var(--line)" }}>
+        <VerdictBadge verdict={myth.verdict} size="md" />
+        <h1
+          className="text-[26px] md:text-[30px] font-semibold leading-[1.15] tracking-[-0.025em] mt-3"
+          style={{ color: "var(--ink)" }}
+        >
           {myth.question}
         </h1>
+      </div>
 
+      {/* Content */}
+      <div className="px-[18px] py-6 max-w-2xl flex flex-col gap-4">
         {/* Verdict callout */}
-        <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 mb-6">
-          <p className="text-xs font-black uppercase tracking-widest text-blue-600 mb-1">
+        <div className="rounded-2xl p-4" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+          <p
+            className="text-[10px] uppercase tracking-[0.1em] font-semibold mb-1"
+            style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+          >
             The verdict
           </p>
-          <p className="font-bold text-gray-900 text-lg mb-1">{meta.headline}</p>
-          <p className="text-gray-500 text-sm">{meta.detail}</p>
+          <p className="font-semibold text-[17px] mb-1" style={{ color: "var(--ink)" }}>
+            {meta.headline}
+          </p>
+          <p className="text-[13px]" style={{ color: "var(--muted)" }}>
+            {meta.detail}
+          </p>
         </div>
 
-        {/* Full answer */}
-        <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 mb-6">
-          <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">
-            What the science says
-          </p>
-          <p className="text-gray-800 text-base leading-relaxed">{myth.answer}</p>
+        {/* Split: bro says / science says */}
+        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--line-2)" }}>
+          {/* Bro */}
+          <div className="px-4 py-4" style={{ background: "#2a1418", borderBottom: "1px solid var(--line)" }}>
+            <p
+              className="text-[10px] uppercase tracking-[0.1em] font-semibold mb-2"
+              style={{ color: "var(--debunked)", fontFamily: "var(--font-ibm-plex-mono)" }}
+            >
+              💪 Bro Says
+            </p>
+            <p className="text-[14.5px] leading-[1.5] font-medium" style={{ color: "#fecaca" }}>
+              &ldquo;Trust me bro, {myth.question.toLowerCase().replace("?", "")} — everyone in my gym knows this.&rdquo;
+            </p>
+          </div>
+          {/* Science */}
+          <div className="px-4 py-4" style={{ background: "#16223e" }}>
+            <p
+              className="text-[10px] uppercase tracking-[0.1em] font-semibold mb-2"
+              style={{ color: "var(--blue)", fontFamily: "var(--font-ibm-plex-mono)" }}
+            >
+              🔬 Science Says
+            </p>
+            <p className="text-[14.5px] leading-[1.5] font-medium" style={{ color: "#a8c5ff" }}>
+              {myth.answer}
+            </p>
+          </div>
         </div>
 
         {/* Source */}
-        <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 mb-10">
-          <p className="text-xs font-black uppercase tracking-widest text-blue-500 mb-1">
+        <div className="rounded-2xl p-4" style={{ background: "var(--bg-soft)", border: "1px solid var(--line)" }}>
+          <p
+            className="text-[10px] uppercase tracking-[0.1em] font-semibold mb-1"
+            style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+          >
             Source
           </p>
-          <p className="text-blue-900 text-sm font-semibold">{myth.source}</p>
+          <p className="text-[13px] font-medium" style={{ color: "var(--ink-2)" }}>
+            {myth.source}
+          </p>
         </div>
-
-        {/* Related myths */}
-        {related.length > 0 && (
-          <section>
-            <h2 className="text-lg font-black text-gray-900 mb-4">
-              More {myth.verdict.toLowerCase()} myths
-            </h2>
-            <div className="flex flex-col gap-3">
-              {related.map((m) => (
-                <MythCard key={m.id} myth={m} />
-              ))}
-            </div>
-          </section>
-        )}
       </div>
+
+      {/* Related */}
+      {related.length > 0 && (
+        <div className="px-[18px] pb-6" style={{ borderTop: "1px solid var(--line)" }}>
+          <h2
+            className="text-[17px] font-semibold tracking-[-0.01em] mt-5 mb-3"
+            style={{ color: "var(--ink)" }}
+          >
+            More {myth.verdict.toLowerCase()} myths
+          </h2>
+          <div className="flex flex-col gap-3">
+            {related.map((m) => (
+              <MythCard key={m.id} myth={m} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

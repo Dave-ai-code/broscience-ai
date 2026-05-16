@@ -1,35 +1,48 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+}
+
+:root {
+  --bg:           #0e0e10;
+  --bg-soft:      #18181b;
+  --bg-card:      #1c1c20;
+  --ink:          #fafaf7;
+  --ink-2:        #ececea;
+  --muted:        #b4b4b0;
+  --muted-2:      #7a7a78;
+  --line:         #2a2a2e;
+  --line-2:       #3a3a40;
+  --blue:         #4f8bff;
+  --blue-soft:    #1a2440;
+  --legit:        #4ade80;
+  --legit-soft:   #122a1a;
+  --debunked:     #f87171;
+  --debunked-soft:#2a1418;
+  --partial:      #c084fc;
+  --partial-soft: #221536;
+  --skip-soft:    #1e1e22;
+}
+
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: #f9fafb;
-  color: #111827;
+  background: var(--bg);
+  color: var(--ink);
 }
 
-/* Hide scrollbar for horizontal chip/card rows */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Page transition */
-main {
-  animation: fadeIn 0.18s ease-out;
-}
+main { animation: fadeIn 0.18s ease-out; }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

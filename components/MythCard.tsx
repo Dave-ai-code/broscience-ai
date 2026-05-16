@@ -6,41 +6,50 @@ interface MythCardProps {
   myth: Myth;
 }
 
-const thumbnails = [
-  "1571019613454-1cb2f99b2d8b",
-  "1544367567-0f2fcb009e0b",
-  "1583454110551-21f2fa2afe61",
-  "1549060279-7e168fcee0c2",
-];
-
 export default function MythCard({ myth }: MythCardProps) {
-  const thumb = thumbnails[(myth.id - 1) % thumbnails.length];
-
   return (
-    <Link href={`/myths/${myth.id}`} className="block">
-      <article className="group flex gap-4 bg-white rounded-2xl border border-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-        <div className="flex-1 flex flex-col gap-2 min-w-0">
-          <VerdictBadge verdict={myth.verdict} />
-          <h3 className="font-bold text-gray-900 text-base leading-snug line-clamp-2">
-            {myth.question}
-          </h3>
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-            {myth.answer}
-          </p>
-          <p className="text-xs text-gray-400 font-medium mt-auto pt-1">
-            — {myth.source}
-          </p>
-        </div>
-        <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-gray-100 self-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`https://images.unsplash.com/photo-${thumb}?w=160&q=75`}
-            alt=""
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            width={80}
-            height={80}
-          />
+    <Link href={`/myths/${myth.id}`} className="block group">
+      <article
+        className="flex flex-col gap-2 rounded-2xl p-[14px] transition-colors duration-150"
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--line)",
+        }}
+      >
+        <VerdictBadge verdict={myth.verdict} />
+        <h3
+          className="font-semibold text-[15.5px] leading-[1.3] tracking-[-0.015em]"
+          style={{ color: "var(--ink)" }}
+        >
+          {myth.question}
+        </h3>
+        <p
+          className="text-[13px] leading-[1.45] line-clamp-2"
+          style={{ color: "var(--ink-2)", opacity: 0.78 }}
+        >
+          {myth.answer}
+        </p>
+        <div
+          className="flex items-center justify-between mt-[2px]"
+          style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
+        >
+          <span
+            className="text-[10px] uppercase tracking-[0.06em]"
+            style={{ color: "var(--muted)" }}
+          >
+            {myth.source}
+          </span>
+          <svg
+            className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            style={{ color: "var(--muted-2)" }}
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </div>
       </article>
     </Link>

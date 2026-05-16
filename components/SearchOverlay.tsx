@@ -34,24 +34,20 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const q = query.toLowerCase().trim();
 
   const mythResults = q
-    ? myths
-        .filter(
-          (m) =>
-            m.question.toLowerCase().includes(q) ||
-            m.answer.toLowerCase().includes(q)
-        )
-        .slice(0, 5)
+    ? myths.filter(
+        (m) =>
+          m.question.toLowerCase().includes(q) ||
+          m.answer.toLowerCase().includes(q)
+      ).slice(0, 5)
     : [];
 
   const suppResults = q
-    ? supplements
-        .filter(
-          (s) =>
-            s.name.toLowerCase().includes(q) ||
-            s.broMyth.toLowerCase().includes(q) ||
-            s.reality.toLowerCase().includes(q)
-        )
-        .slice(0, 3)
+    ? supplements.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.broMyth.toLowerCase().includes(q) ||
+          s.reality.toLowerCase().includes(q)
+      ).slice(0, 3)
     : [];
 
   const hasResults = mythResults.length > 0 || suppResults.length > 0;
@@ -60,30 +56,25 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col" role="dialog" aria-modal="true" aria-label="Search">
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0"
+        style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)" }}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Panel slides in from top */}
-      <div className="relative z-10 bg-white w-full shadow-2xl max-h-[80vh] flex flex-col animate-[fadeIn_0.15s_ease-out]">
-        {/* Input row */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-100">
-          <svg
-            className="w-5 h-5 text-gray-400 flex-shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
-            />
+      <div
+        className="relative z-10 w-full max-h-[80vh] flex flex-col animate-[fadeIn_0.15s_ease-out]"
+        style={{
+          background: "var(--bg-soft)",
+          borderBottom: "1px solid var(--line-2)",
+          boxShadow: "0 24px 48px rgba(0,0,0,0.5)",
+        }}
+      >
+        {/* Input */}
+        <div className="flex items-center gap-3 px-[18px] py-4" style={{ borderBottom: "1px solid var(--line)" }}>
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: "var(--muted)" }} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
           </svg>
           <input
             ref={inputRef}
@@ -91,11 +82,13 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search myths, supplements…"
-            className="flex-1 text-base text-gray-900 outline-none placeholder-gray-400 bg-transparent"
+            className="flex-1 text-[15.5px] outline-none bg-transparent"
+            style={{ color: "var(--ink)" }}
           />
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 text-xs font-bold px-2.5 py-1 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border transition-colors"
+            style={{ color: "var(--muted)", borderColor: "var(--line-2)", background: "var(--bg-card)" }}
           >
             Esc
           </button>
@@ -104,22 +97,21 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         {/* Results */}
         <div className="overflow-y-auto flex-1">
           {!q && (
-            <div className="px-4 py-10 text-center">
-              <p className="text-gray-400 text-sm">
-                Type to search {myths.length} myths and {supplements.length} supplements
-              </p>
-            </div>
+            <p className="px-[18px] py-10 text-center text-[13px]" style={{ color: "var(--muted)" }}>
+              Search across {myths.length} myths and {supplements.length} supplements
+            </p>
           )}
 
           {q && !hasResults && (
-            <div className="px-4 py-10 text-center">
-              <p className="text-gray-600 text-sm font-medium">
+            <div className="px-[18px] py-10 text-center">
+              <p className="text-[14px] font-medium" style={{ color: "var(--ink-2)" }}>
                 No results for &ldquo;{query}&rdquo;
               </p>
               <Link
                 href="/myths"
                 onClick={onClose}
-                className="inline-block mt-3 text-blue-600 font-semibold text-sm hover:underline"
+                className="inline-block mt-3 text-[13px] font-semibold hover:underline"
+                style={{ color: "var(--blue)" }}
               >
                 Browse all myths →
               </Link>
@@ -128,7 +120,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
           {mythResults.length > 0 && (
             <section>
-              <p className="px-4 pt-4 pb-1 text-xs font-black uppercase tracking-widest text-gray-400">
+              <p
+                className="px-[18px] pt-4 pb-2 text-[11px] uppercase tracking-[0.1em] font-semibold"
+                style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+              >
                 Myths
               </p>
               {mythResults.map((myth) => (
@@ -136,20 +131,21 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   key={myth.id}
                   href={`/myths/${myth.id}`}
                   onClick={onClose}
-                  className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                  className="flex items-start gap-3 px-[18px] py-3 transition-colors"
+                  style={{ borderBottom: "1px solid var(--line)" }}
                 >
                   <span className="mt-0.5 flex-shrink-0">
                     <VerdictBadge verdict={myth.verdict} size="sm" />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm leading-snug line-clamp-1">
+                    <p className="font-semibold text-[14px] leading-snug line-clamp-1" style={{ color: "var(--ink)" }}>
                       {myth.question}
                     </p>
-                    <p className="text-gray-500 text-xs leading-relaxed line-clamp-1 mt-0.5">
+                    <p className="text-[12px] leading-relaxed line-clamp-1 mt-0.5" style={{ color: "var(--muted)" }}>
                       {myth.answer}
                     </p>
                   </div>
-                  <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: "var(--muted-2)" }} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>
@@ -159,7 +155,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
           {suppResults.length > 0 && (
             <section>
-              <p className="px-4 pt-4 pb-1 text-xs font-black uppercase tracking-widest text-gray-400">
+              <p
+                className="px-[18px] pt-4 pb-2 text-[11px] uppercase tracking-[0.1em] font-semibold"
+                style={{ color: "var(--muted-2)", fontFamily: "var(--font-ibm-plex-mono)" }}
+              >
                 Supplements
               </p>
               {suppResults.map((supp) => (
@@ -167,20 +166,21 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   key={supp.id}
                   href="/supplements"
                   onClick={onClose}
-                  className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                  className="flex items-start gap-3 px-[18px] py-3 transition-colors"
+                  style={{ borderBottom: "1px solid var(--line)" }}
                 >
                   <span className="mt-0.5 flex-shrink-0">
                     <VerdictBadge verdict={supp.verdict} size="sm" />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm leading-snug">
+                    <p className="font-semibold text-[14px] leading-snug" style={{ color: "var(--ink)" }}>
                       {supp.name}
                     </p>
-                    <p className="text-gray-500 text-xs leading-relaxed line-clamp-1 mt-0.5">
+                    <p className="text-[12px] leading-relaxed line-clamp-1 mt-0.5" style={{ color: "var(--muted)" }}>
                       {supp.reality}
                     </p>
                   </div>
-                  <svg className="w-4 h-4 text-gray-300 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: "var(--muted-2)" }} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>
@@ -189,13 +189,14 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
           )}
 
           {hasResults && (
-            <div className="px-4 py-3 border-t border-gray-100">
+            <div className="px-[18px] py-4">
               <Link
                 href={`/myths?q=${encodeURIComponent(query)}`}
                 onClick={onClose}
-                className="text-blue-600 font-semibold text-sm hover:underline"
+                className="text-[13px] font-semibold hover:underline"
+                style={{ color: "var(--blue)" }}
               >
-                See all myth results for &ldquo;{query}&rdquo; →
+                See all results for &ldquo;{query}&rdquo; →
               </Link>
             </div>
           )}
