@@ -1,7 +1,7 @@
 const stats = [
-  { value: "12+", label: "Myths busted" },
+  { value: "20+", label: "Myths busted" },
   { value: "50+", label: "Studies cited" },
-  { value: "8", label: "Supplements rated" },
+  { value: "12", label: "Supplements rated" },
 ];
 
 export default function StatsBar() {

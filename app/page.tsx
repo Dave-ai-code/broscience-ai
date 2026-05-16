@@ -1,26 +1,14 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import ChipRow from "@/components/ChipRow";
 import MythCard from "@/components/MythCard";
 import SupplementCard from "@/components/SupplementCard";
 import StatsBar from "@/components/StatsBar";
-import SearchResult from "@/components/SearchResult";
+import VerdictBadge from "@/components/VerdictBadge";
 import { myths } from "@/data/myths";
 import { supplements } from "@/data/supplements";
 
-const chips = [
-  "Creatine",
-  "Protein timing",
-  "Fasted training",
-  "Spot reduction",
-  "Pre-workout",
-  "Cold showers",
-];
-
 const latestMyths = myths.slice(0, 6);
+const featuredMyth = myths[4]; // "Can you spot-reduce belly fat?" — Debunked
 const featuredSupplements = supplements.slice(0, 4);
 
 const photoGrid = [
@@ -30,56 +18,7 @@ const photoGrid = [
   { id: "1549060279-7e168fcee0c2", label: "Nutrition" },
 ];
 
-type SearchState =
-  | { status: "idle" }
-  | { status: "loading" }
-  | { status: "success"; query: string; broAnswer: string; scienceAnswer: string }
-  | { status: "error"; message: string };
-
 export default function HomePage() {
-  const [activeChip, setActiveChip] = useState<string | null>(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [searchState, setSearchState] = useState<SearchState>({ status: "idle" });
-
-  async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const query = searchValue.trim();
-    if (!query) return;
-
-    setSearchState({ status: "loading" });
-
-    try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setSearchState({ status: "error", message: data.error ?? "Something went wrong." });
-        return;
-      }
-
-      setSearchState({
-        status: "success",
-        query,
-        broAnswer: data.broAnswer,
-        scienceAnswer: data.scienceAnswer,
-      });
-    } catch {
-      setSearchState({ status: "error", message: "Network error. Try again." });
-    }
-  }
-
-  function handleChipSelect(chip: string | null) {
-    setActiveChip(chip);
-    if (chip) {
-      setSearchValue(chip);
-      setSearchState({ status: "idle" });
-    }
-  }
-
   return (
     <>
       {/* ─── HERO ──────────────────────────────────────────── */}
@@ -94,8 +33,8 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/85" />
 
-        <div className="relative z-10 mt-auto px-4 pb-6 md:pb-10 mx-auto w-full max-w-3xl">
-          <div className="mb-4">
+        <div className="relative z-10 mt-auto px-4 pb-8 md:pb-12 mx-auto w-full max-w-3xl">
+          <div className="mb-6">
             <span className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
               Science-backed
             </span>
@@ -107,64 +46,50 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Search bar */}
-          <form onSubmit={handleSearch} className="w-full mb-3">
-            <div className="relative">
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                {searchState.status === "loading" ? (
-                  <svg className="h-5 w-5 animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          {/* Featured myth card */}
+          <Link href={`/myths/${featuredMyth.id}`} className="block group">
+            <div className="rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors duration-200">
+              <div className="px-4 pt-3 pb-1">
+                <p className="text-white/50 text-xs font-black uppercase tracking-widest">
+                  Bro Myth #{featuredMyth.id}
+                </p>
+              </div>
+              <div className="px-4 pb-4 flex items-start gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <VerdictBadge verdict={featuredMyth.verdict} size="sm" />
+                  </div>
+                  <p className="text-white font-bold text-base md:text-lg leading-snug mb-1">
+                    {featuredMyth.question}
+                  </p>
+                  <p className="text-white/70 text-sm leading-relaxed line-clamp-2">
+                    {featuredMyth.answer}
+                  </p>
+                </div>
+                <span className="text-white/40 group-hover:text-white/80 transition-colors mt-1 flex-shrink-0">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                  </svg>
-                )}
-              </span>
-              <input
-                type="search"
-                value={searchValue}
-                onChange={(e) => {
-                  setSearchValue(e.target.value);
-                  if (searchState.status !== "idle") setSearchState({ status: "idle" });
-                }}
-                placeholder='Ask anything — "does creatine work?" "is cardio bad?"'
-                aria-label="Ask a fitness question"
-                className="w-full min-h-[56px] rounded-full bg-white/95 backdrop-blur-sm pl-14 pr-32 text-base text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500/50 shadow-xl transition"
-              />
-              <button
-                type="submit"
-                disabled={searchState.status === "loading" || !searchValue.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[42px] px-5 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
-              >
-                {searchState.status === "loading" ? "Asking…" : "Ask"}
-              </button>
+                </span>
+              </div>
             </div>
-          </form>
+          </Link>
 
-          {/* Search result */}
-          {searchState.status === "success" && (
-            <SearchResult
-              query={searchState.query}
-              broAnswer={searchState.broAnswer}
-              scienceAnswer={searchState.scienceAnswer}
-              onClear={() => setSearchState({ status: "idle" })}
-            />
-          )}
-
-          {searchState.status === "error" && (
-            <p className="text-red-300 text-sm font-medium mt-2 px-1">
-              {searchState.message}
-            </p>
-          )}
-
-          {/* Chip row — visible when no result showing */}
-          {searchState.status !== "success" && (
-            <div className="mt-3">
-              <ChipRow chips={chips} activeChip={activeChip} onSelect={handleChipSelect} />
-            </div>
-          )}
+          {/* CTAs */}
+          <div className="flex gap-3 mt-4">
+            <Link
+              href="/myths"
+              className="flex-1 text-center min-h-[48px] flex items-center justify-center rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-500 active:scale-95 transition-all shadow-lg"
+            >
+              Explore all myths
+            </Link>
+            <Link
+              href="/supplements"
+              className="flex-1 text-center min-h-[48px] flex items-center justify-center rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-white text-sm font-bold hover:bg-white/25 active:scale-95 transition-all"
+            >
+              Check supplements
+            </Link>
+          </div>
         </div>
       </section>
 

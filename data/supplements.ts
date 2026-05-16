@@ -57,20 +57,20 @@ export const supplements: Supplement[] = [
   },
   {
     id: 6,
-    name: "Magnesium",
+    name: "Magnesium Glycinate",
     verdict: "Legit",
-    broMyth: "Only old people need this",
+    broMyth: "Only old people and heart patients need this",
     reality:
-      "Most people are deficient. Helps sleep, recovery and muscle function. Get glycinate form.",
+      "Most people are deficient. Helps sleep quality, recovery, and muscle function. The glycinate form absorbs best.",
     hasAmazonLink: true,
   },
   {
     id: 7,
-    name: "Vitamin D",
+    name: "Vitamin D3",
     verdict: "Legit",
     broMyth: "Just go outside more",
     reality:
-      "Most people are deficient regardless of sun exposure. Supports immunity, mood and hormones.",
+      "Most people are deficient regardless of sun exposure. Supports immunity, mood, and hormone production.",
     hasAmazonLink: true,
   },
   {
@@ -81,5 +81,41 @@ export const supplements: Supplement[] = [
     reality:
       "Great for joints and tendons, limited muscle-building benefit. Worth it if joints are an issue.",
     hasAmazonLink: true,
+  },
+  {
+    id: 9,
+    name: "Omega-3 / Fish Oil",
+    verdict: "Legit",
+    broMyth: "Just for old people and heart disease",
+    reality:
+      "Solid evidence for reducing inflammation, supporting joint health, and improving recovery. A standard protocol for serious lifters.",
+    hasAmazonLink: true,
+  },
+  {
+    id: 10,
+    name: "ZMA (Zinc + Mg + B6)",
+    verdict: "Partial",
+    broMyth: "Boosts testosterone 10x, bro",
+    reality:
+      "If you're deficient in zinc the benefit is real. For everyone else the T-boost is marginal. Sleep quality improvement is genuine.",
+    hasAmazonLink: true,
+  },
+  {
+    id: 11,
+    name: "Glutamine",
+    verdict: "Skip",
+    broMyth: "Essential for gut health and post-workout recovery",
+    reality:
+      "Studies show no meaningful benefit for healthy people who eat enough protein. Overhyped and overpriced.",
+    hasAmazonLink: false,
+  },
+  {
+    id: 12,
+    name: "Testosterone Boosters",
+    verdict: "Skip",
+    broMyth: "Natural way to double your T levels",
+    reality:
+      "Most have no human clinical evidence. Ashwagandha is the only common ingredient with modest cortisol/stress benefits.",
+    hasAmazonLink: false,
   },
 ];

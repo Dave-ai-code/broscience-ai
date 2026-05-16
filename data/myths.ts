@@ -105,4 +105,68 @@ export const myths: Myth[] = [
       "Meal timing matters far less than total daily intake. Skipping breakfast won't hurt your progress.",
     source: "J Nutr, 2021",
   },
+  {
+    id: 13,
+    question: "Do you need to stretch before lifting?",
+    verdict: "Partial",
+    answer:
+      "Static stretching before lifting can reduce power output. A dynamic warm-up is better pre-session; save static stretching for after.",
+    source: "J Strength Cond Res, 2021",
+  },
+  {
+    id: 14,
+    question: "Does eating fat make you fat?",
+    verdict: "Debunked",
+    answer:
+      "Dietary fat doesn't directly cause body fat gain. A caloric surplus is the culprit. Healthy fats support hormones and joint health.",
+    source: "Am J Clin Nutr, 2020",
+  },
+  {
+    id: 15,
+    question: "Is high-rep training just for toning?",
+    verdict: "Debunked",
+    answer:
+      "\"Toning\" isn't a physiological term. High reps build muscle just like low reps — progressive overload and volume are what matter.",
+    source: "J Appl Physiol, 2021",
+  },
+  {
+    id: 16,
+    question: "Will eating after 8pm cause fat gain?",
+    verdict: "Debunked",
+    answer:
+      "Your body doesn't clock-watch. Total calories and quality over 24 hours determines fat gain, not meal timing.",
+    source: "Obesity Reviews, 2022",
+  },
+  {
+    id: 17,
+    question: "Does more sweat mean a better workout?",
+    verdict: "Debunked",
+    answer:
+      "Sweat is your body regulating temperature, not burning fat. You can sweat heavily in hot conditions with minimal effort.",
+    source: "Int J Sports Med, 2020",
+  },
+  {
+    id: 18,
+    question: "Is soreness a sign of muscle growth?",
+    verdict: "Partial",
+    answer:
+      "DOMS indicates muscle damage, not necessarily growth. You can grow without feeling sore — and soreness doesn't scale with results.",
+    source: "Eur J Appl Physiol, 2022",
+  },
+  {
+    id: 19,
+    question: "Should you avoid carbs for fat loss?",
+    verdict: "Partial",
+    answer:
+      "Carbs don't inherently cause fat gain. A caloric deficit drives fat loss regardless of macro split — low-carb works but isn't magic.",
+    source: "NEJM, 2020",
+  },
+  {
+    id: 20,
+    question: "Do you need 8 hours of sleep to make gains?",
+    verdict: "Legit",
+    answer:
+      "Sleep is when most muscle repair and hormone release happens. Chronic sleep restriction reduces testosterone, recovery, and performance.",
+    source: "Sleep Medicine Reviews, 2021",
+  },
 ];
